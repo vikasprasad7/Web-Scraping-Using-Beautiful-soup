@@ -1,0 +1,43 @@
+import requests
+from bs4 import BeautifulSoup
+
+website = "https://subslikescript.com/movie/Terror_Ship-47568"
+result = requests.get(website)
+result.text
+content = result.text
+
+soup = BeautifulSoup(content, 'lxml')
+print(soup.prettify())
+
+box = soup.find('article', class_='main-article')
+title = soup.find('p').get_text(strip=True, separator=" ") 
+
+print(title)
+
+with open("filename.txt","w") as file:
+    file.write(title)
+
+website = "https://subslikescript.com/movies"
+result = requests.get(website)
+result.text
+content = result.text
+soup = BeautifulSoup(content,'lxml')
+soup.find('article', class_='main-article')
+
+links = []
+for i in range(5):
+    for link in soup.find_all('a', href=True):
+        links.append(link['href'])
+    
+print(links)
+
+for link in links:
+    website = "https://www.subslikescript.com/movie/f{link}"
+    result = requests.get(website)
+    content = result.text
+    soup = BeautifulSoup(content,'lxml')
+    box = soup.find('article', class_='main-article')
+    title = soup.find('p').get_text(strip=True, separator=" ")
+    with open("filename.txt","w") as file:
+        file.write(title)
+
